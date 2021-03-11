@@ -43,7 +43,8 @@ abline(a = coefficients(m3)[1] + coefficients(m3)[3], b = coefficients(m3)[2] +
 summary(m3)
 
 
-## An example  ------------------------------
+
+## An example - run through this code to see what's going on -------------------
 
 # Data on economic indicators and terrain ruggedness, adapted from dataset used in McElreath (2016)
 d <- read.csv("class12_rugged.csv", stringsAsFactors = T)
@@ -61,11 +62,11 @@ d2$GDP <- log(d2$rgdppc_2000)
 # Plot full data set
 plot(d2$GDP ~ d2$rugged,
      col = 1, pch =16)
-m <- lm(GDP~rugged)
+m <- lm(GDP~rugged, data = d2)
 summary(m)
 abline(m, lwd = 2)
 
-xpoints <- seq(min(rugged), max(rugged), length.out = 100)
+xpoints <- seq(min(d2$rugged), max(d2$rugged), length.out = 100)
 ypoints <- data.frame(predict(m, newdata = data.frame(rugged = xpoints), interval = "confidence", level = 0.95))
 lines(ypoints$lwr ~ xpoints, lty = 2)
 lines(ypoints$upr ~ xpoints, lty = 2)
@@ -93,7 +94,7 @@ m.A1 <- lm(log(d.A0$rgdppc_2000) ~ d.A0$rugged)
 abline(m.A1, col = "blue", lwd = 2)
 
 # Dummy variable doesn't work (because slope can't differ)
-m.dummy <- lm(GDP ~ rugged + d2$cont_africa)
+m.dummy <- lm(GDP ~ rugged + cont_africa, data = d2)
 
 summary(m.dummy)
 
@@ -112,7 +113,7 @@ abline(a = coefficients(m.dummy)[1],
        b = coefficients(m.dummy)[2],
        col="blue", lwd = 2) # not Africa
 abline(a = coefficients(m.dummy)[1] +
-         coefficients(m.dummy)[3],
+               coefficients(m.dummy)[3],
        b = coefficients(m.dummy)[2] ,
        col="orange", lwd = 2) # Africa
 
@@ -120,7 +121,7 @@ abline(a = coefficients(m.dummy)[1] +
 
 # Interaction allows effect of ruggedness to depend on continent
 
-m.interaction <- lm(GDP ~ rugged + d2$cont_africa + d2$cont_africa * rugged)
+m.interaction <- lm(GDP ~ rugged + cont_africa + cont_africa * rugged, data = d2)
 
 summary(m.interaction)
 
@@ -136,10 +137,13 @@ abline(a = coefficients(m.interaction)[1],
        b = coefficients(m.interaction)[2],
        col="blue", lwd = 2) # not Africa
 abline(a = coefficients(m.interaction)[1] +
-         coefficients(m.interaction)[3],
+               coefficients(m.interaction)[3],
        b = coefficients(m.interaction)[2] + 
-         coefficients(m.interaction)[4],
+               coefficients(m.interaction)[4],
        col="orange", lwd = 2) # Africa
+
+
+# End of part 1
 
 ## Data transformation----------------------------------
 
@@ -173,5 +177,3 @@ exp(confint(m)['male',])
 
 (male.pred <- exp(log(40)-0.419))
 male.pred/40
-
-

@@ -54,11 +54,11 @@ d2$GDP <- log(d2$rgdppc_2000)
 # Plot full data set
 plot(d2$GDP ~ d2$rugged,
      col = 1, pch =16)
-m <- lm(GDP~rugged)
+m <- lm(GDP~rugged, data = d2)
 summary(m)
 abline(m, lwd = 2)
 
-xpoints <- seq(min(rugged), max(rugged), length.out = 100)
+xpoints <- seq(min(d2$rugged), max(d2$rugged), length.out = 100)
 ypoints <- data.frame(predict(m, newdata = data.frame(rugged = xpoints), interval = "confidence", level = 0.95))
 lines(ypoints$lwr ~ xpoints, lty = 2)
 lines(ypoints$upr ~ xpoints, lty = 2)
@@ -86,7 +86,7 @@ m.A1 <- lm(log(d.A0$rgdppc_2000) ~ d.A0$rugged)
 abline(m.A1, col = "blue", lwd = 2)
 
 # Dummy variable doesn't work (because slope can't differ)
-m.dummy <- lm(GDP ~ rugged + d2$cont_africa)
+m.dummy <- lm(GDP ~ rugged + cont_africa, data = d2)
 
 summary(m.dummy)
 
@@ -113,7 +113,7 @@ abline(a = coefficients(m.dummy)[1] +
 
 # Interaction allows effect of ruggedness to depend on continent
 
-m.interaction <- lm(GDP ~ rugged + d2$cont_africa + d2$cont_africa * rugged)
+m.interaction <- lm(GDP ~ rugged + cont_africa + cont_africa * rugged, data = d2)
 
 summary(m.interaction)
 
