@@ -15,25 +15,27 @@ plot(y ~ x, cex = 2, pch = ifelse(dat$male == 1, 16, 16),
 
 
 #1a Run a model of y as a function of x that ignores sex:
-
+m1 <- with(dat, lm(y ~ x))
 #b Examine a summary of the model
-
+summary(m)
 #c Make a plot of the data from the model above add the regression line of best fit
-
+abline(m)
 
 #2a Now write a model that includes sex as main effect:
-
+m2 <- with(dat, lm(y ~ x + male))
 #b Examine a summary of the model
-
+summary(m2)
 #c Make a plot of the data from the model above add the regression line of best fit for each sex
-
+abline(coef(m2)[1], coef(m2)[2], col = "orange")
+abline(coef(m2)[1] + coef(m2)[3], coef(m2)[2], col = "blue")
 
 #3a Now write a model that includes an interaction between x and sex
-
+m3 <- with(dat, lm(y ~ x * male))
 #b Examine a summary of the model
-
+summary(m3)
 #c Make a plot of the data from the model above add the regression line of best fit for each sex
-
+abline(coef(m3)[1], coef(m3)[2], col = "orange")
+abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2] + coef(m3)[4], col = "blue")
 
 
 ## An example - run through this code to see what's going on -------------------
